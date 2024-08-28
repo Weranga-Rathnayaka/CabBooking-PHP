@@ -33,10 +33,10 @@
               <span class="info-box-icon bg-gradient-warning elevation-1"><i class="fas fa-taxi"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Available Cabs</span>
+                <span class="info-box-text">Available Drivers</span>
                 <span class="info-box-number">
                   <?php 
-                    $inv = $conn->query("SELECT count(id) as total FROM cab_list where delete_flag = 0 ")->fetch_assoc()['total'];
+                    $inv = $conn->query("SELECT count(id) as total FROM driver_list where delete_flag = 0 ")->fetch_assoc()['total'];
                     echo number_format($inv);
                   ?>
                   <?php ?>

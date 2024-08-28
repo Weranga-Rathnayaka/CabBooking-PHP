@@ -28,7 +28,7 @@
                 <tbody>
                     <?php 
                     $i = 1;
-                    $bookings = $conn->query("SELECT b.*,concat(c.lastname,', ', c.firstname,' ',c.middlename) as client, cab_reg_no FROM `booking_list` b inner join client_list c on b.client_id = c.id inner join cab_list cc on b.cab_id = cc.id order by unix_timestamp(b.date_created) desc ");
+                    $bookings = $conn->query("SELECT b.*,concat(c.lastname,', ', c.firstname,' ',c.middlename) as client, driver_identity FROM `booking_list` b inner join client_list c on b.client_id = c.id inner join driver_list cc on b.driver_id= cc.id order by unix_timestamp(b.date_created) desc ");
                     while($row = $bookings->fetch_assoc()):
                     ?>
                         <tr>
@@ -36,7 +36,7 @@
                             <td><?= date("Y-m-d H:i", strtotime($row['date_created'])) ?></td>
                             <td><?= $row['ref_code'] ?></td>
                             
-                            <td><?= $row['cab_reg_no'] ?></td>
+                            <td><?= $row['driver_identity'] ?></td>
                             <td><?= $row['client'] ?></td>
                             <td class="text-center">
                                 <?php 

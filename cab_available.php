@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-md-12">
             <center>
-            <h1 class="display-4 fw-bolder">Available Cabs</h1>
+            <h1 class="display-4 fw-bolder">Available Drivers</h1>
             <hr>
             </center>
                 <div class="form-group">
@@ -25,18 +25,18 @@
                 </div>
                 <hr>
                 </div>
-                <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-xl-3" id="cab_list">
+                <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-xl-3" id="driver_list">
                     <?php 
-                    $cabs = $conn->query("SELECT c.*, cc.name as category FROM `cab_list` c inner join category_list cc on c.category_id = cc.id where c.delete_flag = 0 and c.id not in (SELECT cab_id FROM `booking_list` where `status` in (0,1,2)) order by c.`reg_code`");
+                    $cabs = $conn->query("SELECT c.*, cc.name as category FROM `driver_list` c inner join category_list cc on c.category_id = cc.id where c.delete_flag = 0 and c.id not in (SELECT driver_id FROM `booking_list` where `status` in (0,1,2)) order by c.`reg_code`");
                     while($row= $cabs->fetch_assoc()):
                     ?>
-                    <a class="col item text-decoration-none text-dark book_cab" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-bodyno="<?php echo $row['body_no'] ?>">
+                    <a class="col item text-decoration-none text-dark book_cab" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-bodyno="<?php echo $row['driver_name'] ?>">
                         <div class="callout callout-primary border-success rounded-0">
                             <dl>
-                                <dt class="h3"><i class="fa fa-taxi"></i> <?php echo $row['body_no'] ?></dt>
+                                <dt class="h3"><i class="fa fa-taxi"></i> <?php echo $row['driver_name'] ?></dt>
                                 <dd class="truncate-3 text-muted lh-1">
                                     <small><?php echo $row['category'] ?></small><br>
-                                    <small><?php echo $row['cab_model'] ?></small>
+                                    <small><?php echo $row['driver_identity'] ?></small>
                                 </dd>
                             </dl>
                         </div>
@@ -52,7 +52,7 @@
     $(function(){
         $('#search').on('input',function(){
             var _search = $(this).val().toLowerCase().trim()
-            $('#cab_list .item').each(function(){
+            $('#driver_list .item').each(function(){
                 var _text = $(this).text().toLowerCase().trim()
                     _text = _text.replace(/\s+/g,' ')
                     console.log(_text)
@@ -62,16 +62,16 @@
                     $(this).toggle(false)
                 }
             })
-            if( $('#cab_list .item:visible').length > 0){
+            if( $('#driver_list .item:visible').length > 0){
                 $('#noResult').hide('slow')
             }else{
                 $('#noResult').show('slow')
             }
         })
-        $('#cab_list .item').hover(function(){
+        $('#driver_list .item').hover(function(){
             $(this).find('.callout').addClass('shadow')
         })
-        $('#cab_list .book_cab').click(function(){
+        $('#driver_list .book_cab').click(function(){
             if("<?= $_settings->userdata('id') && $_settings->userdata('login_type') == 2 ?>" == 1)
                 uni_modal("Book Cab - "+$(this).attr('data-bodyno'),"booking.php?cid="+$(this).attr('data-id'),'mid-large');
             else

@@ -7,7 +7,7 @@
 	<div class="card-header">
 		<h3 class="card-title">List of Cabs</h3>
 		<div class="card-tools">
-			<a href="?page=cabs/manage_cab" class="btn btn-flat btn-success btn-sm"><span class="fas fa-plus"></span>  Add New Cab</a>
+			<a href="?page=cabs/manage_cab" class="btn btn-flat btn-success btn-sm"><span class="fas fa-plus"></span>  Add New Driver</a>
 		</div>
 	</div>
 	<div class="card-body">
@@ -30,7 +30,7 @@
 						<!-- <th>Date Created</th> -->
 						<th>Reg. Code</th>
 						<th>Category</th>
-						<th>Model</th>
+						<th>Driver Name</th>
 						<th>Details</th>
 						<th>Status</th>
 						<th>Action</th>
@@ -39,7 +39,7 @@
 				<tbody>
 					<?php 
 					$i = 1;
-						$qry = $conn->query("SELECT c.*,cc.name as category from `cab_list` c inner join category_list cc on c.category_id = cc.id where c.delete_flag = 0 order by (c.`reg_code`) asc ");
+						$qry = $conn->query("SELECT c.*,cc.name as category from `driver_list` c inner join category_list cc on c.category_id = cc.id where c.delete_flag = 0 order by (c.`reg_code`) asc ");
 						while($row = $qry->fetch_assoc()):
 							foreach($row as $k=> $v){
 								$row[$k] = trim(stripslashes($v));
@@ -50,11 +50,11 @@
 							<!-- <td><?php echo date("Y-m-d H:i",strtotime($row['date_created'])) ?></td> -->
 							<td><?php echo ucwords($row['reg_code']) ?></td>
 							<td><?php echo ucwords($row['category']) ?></td>
-							<td><?php echo ucwords($row['cab_model'])?></td>
+							<td><?php echo ucwords($row['driver_name'])?></td>
 							<td>
 								<div>
-									<p class="m-0 truncate-1"><small><b>Plate:</b> <?= $row['cab_reg_no'] ?></small></p>
-									<p class="m-0 truncate-1"><small><b>Driver:</b> <?= $row['cab_driver'] ?></small></p>
+									<p class="m-0 truncate-1"><small><b>Id Number:</b> <?= $row['driver_identity'] ?></small></p>
+									<!-- <p class="m-0 truncate-1"><small><b>Driver:</b> <?= $row['driver_name'] ?></small></p> -->
 								</div>
 							</td>
 							<td class="text-center">

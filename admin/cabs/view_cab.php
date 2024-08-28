@@ -1,6 +1,6 @@
 <?php
 if(isset($_GET['id']) && $_GET['id'] > 0){
-    $qry = $conn->query("SELECT c.*, cc.name as category from `cab_list` c inner join category_list cc on c.category_id = cc.id where c.id = '{$_GET['id']}' ");
+    $qry = $conn->query("SELECT c.*, cc.name as category from `driver_list` c inner join category_list cc on c.category_id = cc.id where c.id = '{$_GET['id']}' ");
     if($qry->num_rows > 0){
         foreach($qry->fetch_assoc() as $k => $v){
             $$k=stripslashes($v);
@@ -19,7 +19,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 <div class="content py-3">
     <div class="card card-outline rounded-0 card-purple shadow">
         <div class="card-header">
-            <h4 class="card-title">Cab Details</h4>
+            <h4 class="card-title">Driver Details</h4>
             <div class="card-tools">
                 <a class="btn btn-primary btn-sm btn-flat" href="./?page=cabs/manage_cab&id=<?= isset($id) ? $id : "" ?>"><i class="fa fa-edit"></i> Edit</a>
                 <a class="btn btn-danger btn-sm btn-flat" href="javascript:void(0)>" id="delete_data"><i class="fa fa-trash"></i> Delete</a>
@@ -44,30 +44,30 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                     </div>
                 </div>
                 <fieldset>
-                    <legend class="h4 text-muted"><b>Cab Details</b></legend>
+                    <!-- <legend class="h4 text-muted"><b>Driver Details</b></legend> -->
                     <div class="row">
                         <div class="col-md-6">
-                            <small class="mx-2 text-muted">Vehicle Registration No</small>
-                            <div class="pl-4"><?= isset($cab_reg_no) ? $cab_reg_no : '' ?></div>
+                            <small class="mx-2 text-muted">Driver ID Number</small>
+                            <div class="pl-4"><?= isset($driver_identity) ? $driver_identity : '' ?></div>
                         </div>
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <small class="mx-2 text-muted">Model</small>
                             <div class="pl-4"><?= isset($cab_model) ? $cab_model : '' ?></div>
-                        </div>
+                        </div> -->
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-md-6">
                             <small class="mx-2 text-muted">Body No.</small>
                             <div class="pl-4"><?= isset($body_no) ? $body_no : '' ?></div>
                         </div>
-                    </div>
+                    </div> -->
                 </fieldset>
                 <fieldset>
-                    <legend class="h4 text-muted"><b>Driver Details</b></legend>
+                    <!-- <legend class="h4 text-muted"><b>Driver Details</b></legend> -->
                     <div class="row">
                         <div class="col-md-6">
                             <small class="mx-2 text-muted">Name</small>
-                            <div class="pl-4"><?= isset($cab_driver) ? $cab_driver : '' ?></div>
+                            <div class="pl-4"><?= isset($driver_name) ? $driver_name : '' ?></div>
                         </div>
                         <div class="col-md-6">
                             <small class="mx-2 text-muted">Contact #</small>

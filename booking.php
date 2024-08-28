@@ -12,7 +12,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 <div class="container-fluid">
     <form action="" id="booking-form">
         <input type="hidden" name="id" value="<?= isset($id) ? $id : '' ?>">
-        <input type="hidden" name="cab_id" value="<?= isset($_GET['cid']) ? $_GET['cid'] : (isset($cab_id) ? $cab_id : "") ?>">
+        <input type="hidden" name="driver_id" value="<?= isset($_GET['cid']) ? $_GET['cid'] : (isset($driver_id) ? $driver_id : "") ?>">
         <div class="form-group">
             <label for="pickup_zone" class="control-label">Pickup Location</label>
             <textarea name="pickup_zone" id="pickup_zone" rows="2" class="form-control form-control-sm rounded-0" required></textarea>

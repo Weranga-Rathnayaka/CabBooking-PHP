@@ -1,6 +1,6 @@
 <?php 
 if($_settings->userdata('id') > 0 && $_settings->userdata('login_type') == 3){
-    $qry = $conn->query("SELECT * FROM `cab_list` where id = '{$_settings->userdata('id')}'");
+    $qry = $conn->query("SELECT * FROM `driver_list` where id = '{$_settings->userdata('id')}'");
     if($qry->num_rows >0){
         $res = $qry->fetch_array();
         foreach($res as $k => $v){
@@ -35,8 +35,8 @@ if($_settings->userdata('id') > 0 && $_settings->userdata('login_type') == 3){
                         <input type="hidden" name="id" value="<?= isset($id) ? $id : "" ?>">
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <input type="text" name="cab_driver" id="cab_driver" placeholder="Enter Fullname Name" autofocus class="form-control form-control-sm form-control-border" value="<?= isset($cab_driver) ? $cab_driver : "" ?>" required>
-                                <small class="ml-3">Fullname</small>
+                                <input type="text" name="driver_name" id="driver_name" placeholder=" FullName " autofocus class="form-control form-control-sm form-control-border" value="<?= isset($driver_name) ? $driver_name : "" ?>" required>
+                                <small class="ml-3">FullName</small>
                             </div>
                         </div>
                         <div class="row">

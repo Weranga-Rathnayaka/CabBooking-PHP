@@ -6,7 +6,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
         foreach($qry->fetch_assoc() as $k => $v){
             $$k=$v;
         }
-        $qry2 = $conn->query("SELECT c.*, cc.name as category from `cab_list` c inner join category_list cc on c.category_id = cc.id where c.id = '{$cab_id}' ");
+        $qry2 = $conn->query("SELECT c.*, cc.name as category from `driver_list` c inner join category_list cc on c.category_id = cc.id where c.id = '{$driver_id}' ");
         if($qry2->num_rows > 0){
             foreach($qry2->fetch_assoc() as $k => $v){
                 if(!isset($$k))
@@ -26,16 +26,16 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
     <div class="row">
         <div class="col-md-6">
             <fieldset class="bor">
-                <legend class="h5 text-muted"> Cab Details</legend>
+                <legend class="h5 text-muted"> Driver Details</legend>
                 <dl>
-                    <dt class="">Cab Body No</dt>
-                    <dd class="pl-4"><?= isset($body_no) ? $body_no : "" ?></dd>
+                    <!-- <dt class="">Cab Body No</dt>
+                    <dd class="pl-4"><?= isset($body_no) ? $body_no : "" ?></dd> -->
                     <dt class="">Vehicle Category</dt>
                     <dd class="pl-4"><?= isset($category) ? $category : "" ?></dd>
-                    <dt class="">Vehicle model</dt>
-                    <dd class="pl-4"><?= isset($cab_model) ? $cab_model : "" ?></dd>
-                    <dt class="">Driver</dt>
-                    <dd class="pl-4"><?= isset($cab_driver) ? $cab_driver : "" ?></dd>
+                    <!-- <dt class="">Vehicle model</dt>
+                    <dd class="pl-4"><?= isset($cab_model) ? $cab_model : "" ?></dd> -->
+                    <dt class="">Driver Name</dt>
+                    <dd class="pl-4"><?= isset($driver_name) ? $driver_name : "" ?></dd>
                     <dt class="">Driver Contact</dt>
                     <dd class="pl-4"><?= isset($driver_contact) ? $driver_contact : "" ?></dd>
                     <dt class="">Driver Address</dt>

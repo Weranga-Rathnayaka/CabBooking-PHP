@@ -27,7 +27,7 @@
                     <tbody>
                         <?php 
                         $i = 1;
-                            $qry = $conn->query("SELECT * FROM `booking_list` where cab_id = '{$_settings->userdata('id')}' order by unix_timestamp(date_created) desc");
+                            $qry = $conn->query("SELECT * FROM `booking_list` where driver_id = '{$_settings->userdata('id')}' order by unix_timestamp(date_created) desc");
                             while($row = $qry->fetch_assoc()):
                         ?>
                         <tr>

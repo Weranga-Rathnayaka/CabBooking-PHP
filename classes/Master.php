@@ -83,7 +83,7 @@ Class Master extends DBConnection {
 			$prefix = date('Ym-');
 			$code = sprintf("%'.05d",1);
 			while(true){
-				$check = $this->conn->query("SELECT * FROM `cab_list` where reg_code = '{$prefix}{$code}'")->num_rows;
+				$check = $this->conn->query("SELECT * FROM `driver_list` where reg_code = '{$prefix}{$code}'")->num_rows;
 				if($check > 0){
 					$code = sprintf("%'.05d",ceil($code) + 1);
 				}else{
@@ -103,30 +103,30 @@ Class Master extends DBConnection {
 				$data .= " `{$k}`='{$v}' ";
 			}
 		}
-		if(isset($cab_reg_no)){
-			$check = $this->conn->query("SELECT * FROM `cab_list` where `cab_reg_no` = '{$cab_reg_no}' ".(!empty($id) ? " and id != {$id} " : "")." ")->num_rows;
-			if($this->capture_err())
-				return $this->capture_err();
-			if($check > 0){
-				$resp['status'] = 'failed';
-				$resp['msg'] = " Cab already exist.";
-				return json_encode($resp);
-				exit;
-			}
-		}
-		if(isset($body_no)){
-			$check = $this->conn->query("SELECT * FROM `cab_list` where `body_no` = '{$body_no}' ".(!empty($id) ? " and id != {$id} " : "")." ")->num_rows;
-			if($this->capture_err())
-				return $this->capture_err();
-			if($check > 0){
-				$resp['status'] = 'failed';
-				$resp['msg'] = " Cab Body # already exist.";
-				return json_encode($resp);
-				exit;
-			}
-		}
+		// if(isset($driver_identity)){
+		// 	$check = $this->conn->query("SELECT * FROM `driver_list` where `driver_identity` = '{$driver_identity}' ".(!empty($id) ? " and id != {$id} " : "")." ")->num_rows;
+		// 	if($this->capture_err())
+		// 		return $this->capture_err();
+		// 	if($check > 0){
+		// 		$resp['status'] = 'failed';
+		// 		$resp['msg'] = " Cab already exist.";
+		// 		return json_encode($resp);
+		// 		exit;
+		// 	}
+		// }
+		// if(isset($body_no)){
+		// 	$check = $this->conn->query("SELECT * FROM `driver_list` where `body_no` = '{$body_no}' ".(!empty($id) ? " and id != {$id} " : "")." ")->num_rows;
+		// 	if($this->capture_err())
+		// 		return $this->capture_err();
+		// 	if($check > 0){
+		// 		$resp['status'] = 'failed';
+		// 		$resp['msg'] = " Cab Body # already exist.";
+		// 		return json_encode($resp);
+		// 		exit;
+		// 	}
+		// }
 		if(isset($oldpassword)){
-			$cur_pass = $this->conn->query("SELECT `password` from `cab_list` where id = '{$this->settings->userdata('id')}'")->fetch_array()[0];
+			$cur_pass = $this->conn->query("SELECT `password` from `driver_list` where id = '{$this->settings->userdata('id')}'")->fetch_array()[0];
 			if(md5($oldpassword) != $cur_pass){
 				$resp['status'] = 'failed';
 				$resp['msg'] = " Current Password is Incorrect.";
@@ -135,10 +135,10 @@ Class Master extends DBConnection {
 			}
 		}
 		if(empty($id)){
-			$sql = "INSERT INTO `cab_list` set {$data} ";
+			$sql = "INSERT INTO `driver_list` set {$data} ";
 			$save = $this->conn->query($sql);
 		}else{
-			$sql = "UPDATE `cab_list` set {$data} where id = '{$id}' ";
+			$sql = "UPDATE `driver_list` set {$data} where id = '{$id}' ";
 			$save = $this->conn->query($sql);
 		}
 		if($save){
@@ -146,9 +146,9 @@ Class Master extends DBConnection {
 			$cid = empty($id) ? $this->conn->insert_id : $id;
 			$resp['id'] = $cid ;
 			if(empty($id))
-				$resp['msg'] = " New Cab successfully saved.";
+				$resp['msg'] = " New Driver successfully saved.";
 			else
-				$resp['msg'] = " Cab successfully updated.";
+				$resp['msg'] = " Driver successfully updated.";
 				if($this->settings->userdata('id')  == $cid && $this->settings->userdata('login_type') == 3){
 					foreach($_POST as $k => $v){
 						if(!in_array($k,['password']))
@@ -187,7 +187,7 @@ Class Master extends DBConnection {
 						}
 					}
 					if(isset($uploaded_img)){
-						$this->conn->query("UPDATE cab_list set `image_path` = CONCAT('{$fname}','?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$cid}' ");
+						$this->conn->query("UPDATE driver_list set `image_path` = CONCAT('{$fname}','?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$cid}' ");
 						if($id == $this->settings->userdata('id')){
 								$this->settings->set_userdata('avatar',$fname);
 						}
@@ -204,10 +204,10 @@ Class Master extends DBConnection {
 	}
 	function delete_cab(){
 		extract($_POST);
-		$del = $this->conn->query("UPDATE `cab_list` set `delete_flag` = 1  where id = '{$id}'");
+		$del = $this->conn->query("UPDATE `driver_list` set `delete_flag` = 1  where id = '{$id}'");
 		if($del){
 			$resp['status'] = 'success';
-			$this->settings->set_flashdata('success'," Cab successfully deleted.");
+			$this->settings->set_flashdata('success'," Driver successfully deleted.");
 		}else{
 			$resp['status'] = 'failed';
 			$resp['error'] = $this->conn->error;
@@ -220,7 +220,7 @@ Class Master extends DBConnection {
 			$prefix = date('Ym-');
 			$code = sprintf("%'.05d",1);
 			while(true){
-				$check = $this->conn->query("SELECT * FROM `cab_list` where reg_code = '{$prefix}{$code}'")->num_rows;
+				$check = $this->conn->query("SELECT * FROM `driver_list` where reg_code = '{$prefix}{$code}'")->num_rows;
 				if($check > 0){
 					$code = sprintf("%'.05d",ceil($code) + 1);
 				}else{
@@ -248,7 +248,7 @@ Class Master extends DBConnection {
 		if($save){
 			$resp['status'] = 'success';
 			if(empty($id))
-				$this->settings->set_flashdata('success'," Cab has been booked successfully.");
+				$this->settings->set_flashdata('success'," Driver has been booked successfully.");
 			else
 				$this->settings->set_flashdata('success'," Booking successfully updated.");
 		}else{

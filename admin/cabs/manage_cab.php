@@ -1,6 +1,6 @@
 <?php
 if(isset($_GET['id']) && $_GET['id'] > 0){
-    $qry = $conn->query("SELECT * from `cab_list` where id = '{$_GET['id']}' ");
+    $qry = $conn->query("SELECT * from `driver_list` where id = '{$_GET['id']}' ");
     if($qry->num_rows > 0){
         foreach($qry->fetch_assoc() as $k => $v){
             $$k=stripslashes($v);
@@ -18,7 +18,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 </style>
 <div class="card card-outline card-purple rounded-0">
 	<div class="card-header">
-		<h3 class="card-title"><?php echo isset($id) ? "Update ": "Create New " ?> Cab</h3>
+		<h3 class="card-title"><?php echo isset($id) ? "Update ": "Create New " ?> Driver</h3>
 	</div>
 	<div class="card-body">
 		<form action="" id="cab-form">
@@ -36,20 +36,20 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 </select>
 			</div>
 			<div class="form-group">
-				<label for="cab_reg_no" class="control-label">Plate #/Vehicle Reg #</label>
-                <input name="cab_reg_no" id="cab_reg_no" type="text" class="form-control rounded-0" value="<?php echo isset($cab_reg_no) ? $cab_reg_no : ''; ?>" required>
+				<label for="driver_identity" class="control-label">ID Number #</label>
+                <input name="driver_identity" id="driver_identity" type="text" class="form-control rounded-0" value="<?php echo isset($driver_identity) ? $driver_identity : ''; ?>" required>
 			</div>
-			<div class="form-group">
+			<!-- <div class="form-group">
 				<label for="cab_model" class="control-label">Vehicle Model</label>
                 <input name="cab_model" id="cab_model" type="text" class="form-control rounded-0" value="<?php echo isset($cab_model) ? $cab_model : ''; ?>" required>
 			</div>
 			<div class="form-group">
 				<label for="body_no" class="control-label">Cab's Body #</label>
                 <input name="body_no" id="body_no" type="text" class="form-control rounded-0" value="<?php echo isset($body_no) ? $body_no : ''; ?>" required>
-			</div>
+			</div> -->
             <div class="form-group">
-				<label for="cab_driver" class="control-label">Driver Name</label>
-                <input name="cab_driver" id="cab_driver" type="text" class="form-control rounded-0" value="<?php echo isset($cab_driver) ? $cab_driver : ''; ?>" required>
+				<label for="driver_name" class="control-label">Driver Name</label>
+                <input name="driver_name" id="driver_name" type="text" class="form-control rounded-0" value="<?php echo isset($driver_name) ? $driver_name : ''; ?>" required>
 			</div>
 			<div class="form-group">
 				<label for="driver_contact" class="control-label">Driver's Contact #</label>

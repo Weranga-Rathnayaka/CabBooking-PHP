@@ -27,7 +27,7 @@
                         <li class="nav-item"><a class="nav-link <?= isset($page) && $page == 'home'? "active" : '' ?>" aria-current="page" href="./">Home</a></li>
                         <li class="nav-item"><a class="nav-link <?= isset($page) && $page == 'about'? "active" : '' ?>" href="./?p=about">About Us</a></li>
                         <li class="nav-item"><a class="nav-link <?= isset($page) && $page == 'contact'? "active" : '' ?>" href="./?p=contact">Contact</a></li>
-                        <li class="nav-item"><a class="nav-link <?= isset($page) && $page == 'cab_available'? "active" : '' ?>" href="./?p=cab_available">Available Cabs</a></li>
+                        <li class="nav-item"><a class="nav-link <?= isset($page) && $page == 'cab_available'? "active" : '' ?>" href="./?p=cab_available">Available Drivers</a></li>
                     </ul>
                     <div class="d-flex align-items-center">
                     </div>

@@ -43,7 +43,7 @@
                       <a href="<?php echo base_url ?>admin/?page=cabs" class="nav-link nav-cabs">
                         <i class="nav-icon fas fa-taxi"></i>
                         <p>
-                          Cab Management
+                          Driver Management
                         </p>
                       </a>
                     </li>

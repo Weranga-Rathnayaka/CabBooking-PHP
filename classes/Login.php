@@ -79,7 +79,7 @@ class Login extends DBConnection {
 	public function login_driver(){
 		extract($_POST);
 		$password = md5($password);
-		$stmt = $this->conn->prepare("SELECT * from cab_list where reg_code = ? and `password` =? and delete_flag = ?  ");
+		$stmt = $this->conn->prepare("SELECT * from driver_list where reg_code = ? and `password` =? and delete_flag = ?  ");
 		$delete_flag = 0;
 		$stmt->bind_param("ssi",$reg_code,$password,$delete_flag);
 		$stmt->execute();
