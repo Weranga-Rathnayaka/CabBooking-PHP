@@ -1,16 +1,41 @@
 <?php
 require_once('./config.php');
 if(isset($_GET['id']) && $_GET['id'] > 0){
-    $qry = $conn->query("SELECT * from `booking_list` where id = '{$_GET['id']}' ");
+    // Fetch the booking and client information, including contact
+    $qry = $conn->query("SELECT 
+                            b.*, 
+                            CONCAT(c.lastname, ', ', c.firstname, ' ', c.middlename) AS client, 
+                            c.contact 
+                         FROM 
+                            `booking_list` b 
+                         INNER JOIN 
+                            client_list c 
+                         ON 
+                            b.client_id = c.id 
+                         WHERE 
+                            b.id = '{$_GET['id']}'");
+                         
     if($qry->num_rows > 0){
         foreach($qry->fetch_assoc() as $k => $v){
-            $$k=$v;
+            $$k = $v;
         }
-        $qry2 = $conn->query("SELECT c.*, cc.name as category from `driver_list` c inner join category_list cc on c.category_id = cc.id where c.id = '{$driver_id}' ");
+        
+        // Fetch the driver information
+        $qry2 = $conn->query("SELECT 
+                                c.*, 
+                                cc.name AS category 
+                              FROM 
+                                `driver_list` c 
+                              INNER JOIN 
+                                category_list cc 
+                              ON 
+                                c.category_id = cc.id 
+                              WHERE 
+                                c.id = '{$driver_id}'");
+                              
         if($qry2->num_rows > 0){
             foreach($qry2->fetch_assoc() as $k => $v){
-                if(!isset($$k))
-                $$k=$v;
+                if(!isset($$k)) $$k = $v;
             }
         }
     }
@@ -26,16 +51,21 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
     <div class="row">
         <div class="col-md-6">
             <fieldset class="bor">
-                <legend class="h5 text-muted"> Cab Details</legend>
+                <legend class="h5 text-muted"> </legend>
                 <dl>
-                    <dt class="">Cab Body No</dt>
-                    <dd class="pl-4"><?= isset($body_no) ? $body_no : "" ?></dd>
+                    <dt class="">Fee</dt>
+                    <!-- <dd class="pl-4"><?= isset($fee) ? $fee : "" ?></dd> -->
+                    <dd class="pl-4"><?= isset($fee) ? "LKR " . $fee : "" ?></dd>
+
+                    <dt class="">Client Contact No</dt>                   
+                    <dd class="pl-4"><?= isset($contact) ?  $contact : "" ?></dd>
+
                     <dt class="">Vehicle Category</dt>
                     <dd class="pl-4"><?= isset($category) ? $category : "" ?></dd>
-                    <dt class="">Vehicle model</dt>
-                    <dd class="pl-4"><?= isset($cab_model) ? $cab_model : "" ?></dd>
+                    <!-- <dt class="">Vehicle model</dt>
+                    <dd class="pl-4"><?= isset($cab_model) ? $cab_model : "" ?></dd> -->
                     <dt class="">Driver</dt>
-                    <dd class="pl-4"><?= isset($cab_driver) ? $cab_driver : "" ?></dd>
+                    <dd class="pl-4"><?= isset($driver_name) ? $driver_name : "" ?></dd>
                     <dt class="">Driver Contact</dt>
                     <dd class="pl-4"><?= isset($driver_contact) ? $driver_contact : "" ?></dd>
                     <dt class="">Driver Address</dt>
@@ -48,7 +78,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 
         <div class="col-md-6">
             <fieldset class="bor">
-                <legend class="h5 text-muted"> Booking Details</legend>
+                <legend class="h5 text-muted"> </legend>
                 <dl>
                     <dt class="">Ref. Code</dt>
                     <dd class="pl-4"><?= isset($ref_code) ? $ref_code : "" ?></dd>

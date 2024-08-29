@@ -1,16 +1,43 @@
 <?php
 require_once('./../config.php');
 if(isset($_GET['id']) && $_GET['id'] > 0){
-    $qry = $conn->query("SELECT * from `booking_list` where id = '{$_GET['id']}' ");
+    // Fetch the booking, client, and client contact information
+    $qry = $conn->query("SELECT 
+                            b.*, 
+                            CONCAT(c.lastname, ', ', c.firstname, ' ', c.middlename) AS client, 
+                            c.contact,
+                            c.email,
+                            c.firstname
+                         FROM 
+                            `booking_list` b 
+                         INNER JOIN 
+                            `client_list` c 
+                         ON 
+                            b.client_id = c.id 
+                         WHERE 
+                            b.id = '{$_GET['id']}'");
+                         
     if($qry->num_rows > 0){
         foreach($qry->fetch_assoc() as $k => $v){
-            $$k=$v;
+            $$k = $v;
         }
-        $qry2 = $conn->query("SELECT c.*, cc.name as category from `driver_list` c inner join category_list cc on c.category_id = cc.id where c.id = '{$driver_id}' ");
+        
+        // Fetch the driver information
+        $qry2 = $conn->query("SELECT 
+                                c.*, 
+                                cc.name AS category 
+                              FROM 
+                                `driver_list` c 
+                              INNER JOIN 
+                                `category_list` cc 
+                              ON 
+                                c.category_id = cc.id 
+                              WHERE 
+                                c.id = '{$driver_id}'");
+                              
         if($qry2->num_rows > 0){
             foreach($qry2->fetch_assoc() as $k => $v){
-                if(!isset($$k))
-                $$k=$v;
+                if(!isset($$k)) $$k = $v;
             }
         }
     }
@@ -26,16 +53,18 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
     <div class="row">
         <div class="col-md-6">
             <fieldset class="bor">
-                <legend class="h5 text-muted"> Driver Details</legend>
+                <legend class="h5 text-muted"> </legend>
                 <dl>
-                    <!-- <dt class="">Cab Body No</dt>
-                    <dd class="pl-4"><?= isset($body_no) ? $body_no : "" ?></dd> -->
+                    <dt class="">Fee</dt>
+                    <dd class="pl-4"><?= isset($fee) ? "LKR " . $fee : "" ?></dd>
                     <dt class="">Vehicle Category</dt>
                     <dd class="pl-4"><?= isset($category) ? $category : "" ?></dd>
-                    <!-- <dt class="">Vehicle model</dt>
-                    <dd class="pl-4"><?= isset($cab_model) ? $cab_model : "" ?></dd> -->
+                    <dt class="">Client Contact No</dt>
+                    <dd class="pl-4"><?= isset($contact) ? $contact : "" ?></dd>
                     <dt class="">Driver Name</dt>
                     <dd class="pl-4"><?= isset($driver_name) ? $driver_name : "" ?></dd>
+                    <dt class="">Client Email</dt>
+                    <dd class="pl-4"><?= isset($email) ? $email : "" ?></dd>
                     <dt class="">Driver Contact</dt>
                     <dd class="pl-4"><?= isset($driver_contact) ? $driver_contact : "" ?></dd>
                     <dt class="">Driver Address</dt>
@@ -48,7 +77,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 
         <div class="col-md-6">
             <fieldset class="bor">
-                <legend class="h5 text-muted"> Booking Details</legend>
+                <legend class="h5 text-muted"> </legend>
                 <dl>
                     <dt class="">Ref. Code</dt>
                     <dd class="pl-4"><?= isset($ref_code) ? $ref_code : "" ?></dd>
@@ -107,26 +136,80 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
             _conf("Mark [Ref. Code: <b><?= isset($ref_code) ? $ref_code : "" ?></b>] booking as Dropped Off?", "update_booking_status",["<?= isset($id) ? $id : "" ?>",3])
         })
     })
-    function update_booking_status($id,$status){
-        start_loader();
-		$.ajax({
-			url:_base_url_+"classes/Master.php?f=update_booking_status",
-			method:"POST",
-			data:{id: $id,status:$status},
-			dataType:"json",
-			error:err=>{
-				console.log(err)
-				alert_toast("An error occured.",'error');
-				end_loader();
-			},
-			success:function(resp){
-				if(typeof resp== 'object' && resp.status == 'success'){
-					location.reload();
-				}else{
-					alert_toast("An error occured.",'error');
-					end_loader();
-				}
-			}
-		})
-    }
+    // function update_booking_status($id,$status){
+    //     start_loader();
+	// 	$.ajax({
+	// 		url:_base_url_+"classes/Master.php?f=update_booking_status",
+	// 		method:"POST",
+	// 		data:{id: $id,status:$status},
+	// 		dataType:"json",
+	// 		error:err=>{
+	// 			console.log(err)
+	// 			alert_toast("An error occured.",'error');
+	// 			end_loader();
+	// 		},
+	// 		success:function(resp){
+	// 			if(typeof resp== 'object' && resp.status == 'success'){
+	// 				location.reload();
+	// 			}else{
+	// 				alert_toast("An error occured.",'error');
+	// 				end_loader();
+	// 			}
+	// 		}
+	// 	})
+    // }
+    function update_booking_status($id, $status) {
+    start_loader();
+
+    // Send email before updating booking status
+    $.ajax({
+        url: _base_url_ + "driver/send_email.php",
+        method: "POST",
+        data: {
+            email: '<?= isset($email) ? $email : "" ?>', // Retrieve the client's email
+            status: $status,
+            ref_code: '<?= isset($ref_code) ? $ref_code : "" ?>',
+            pickup_zone: '<?= isset($pickup_zone) ? $pickup_zone : "" ?>',
+            drop_zone: '<?= isset($drop_zone) ? $drop_zone : "" ?>',
+            driver_name: '<?= isset($driver_name) ? $driver_name : "" ?>',
+            driver_contact: '<?= isset($driver_contact) ? $driver_contact : "" ?>',
+            firstname: '<?= isset($firstname) ? $firstname : "" ?>'
+        },
+        dataType: "json",
+        success: function(emailResp) {
+            if (typeof emailResp == 'object' && emailResp.status == 'success') {
+                // Email sent successfully, now update the booking status
+                $.ajax({
+                    url: _base_url_ + "classes/Master.php?f=update_booking_status",
+                    method: "POST",
+                    data: {id: $id, status: $status},
+                    dataType: "json",
+                    success: function(resp) {
+                        if (typeof resp == 'object' && resp.status == 'success') {
+                            location.reload();
+                        } else {
+                            alert_toast("An error occurred while updating the booking status.", 'error');
+                            end_loader();
+                        }
+                    },
+                    error: function(err) {
+                        console.log(err);
+                        alert_toast("An error occurred while updating the booking status.", 'error');
+                        end_loader();
+                    }
+                });
+            } else {
+                alert_toast("An error occurred while sending the email.", 'error');
+                end_loader();
+            }
+        },
+        error: function(err) {
+            console.log(err);
+            alert_toast("An error occurred while sending the email.", 'error');
+            end_loader();
+        }
+    });
+}
+
+
 </script>

@@ -1,7 +1,7 @@
 <?php
 require_once('./../../config.php');
 if(isset($_GET['id']) && $_GET['id'] > 0){
-    $qry = $conn->query("SELECT  b.*,concat(c.lastname,', ', c.firstname,' ',c.middlename) as client from `booking_list` b inner join client_list c on b.client_id = c.id where b.id = '{$_GET['id']}' ");
+    $qry = $conn->query("SELECT  b.*,concat(c.lastname,', ', c.firstname,' ',c.middlename) as client,c.contact from `booking_list` b inner join client_list c on b.client_id = c.id where b.id = '{$_GET['id']}' ");
     if($qry->num_rows > 0){
         foreach($qry->fetch_assoc() as $k => $v){
             $$k=$v;
@@ -25,14 +25,14 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
     <div class="row">
         <div class="col-md-6">
             <fieldset class="border-bottom">
-            <legend class="h5 text-muted"> Driver Details</legend>
+            <legend class="h5 text-muted"> </legend>
             <dl>
-                <!-- <dt class="">Cab Body No</dt>
-                <dd class="pl-4"><?= isset($body_no) ? $body_no : "" ?></dd> -->
+                <dt class="">Fee</dt>
+                <dd class="pl-4"><?= isset($fee) ? "LKR " . $fee : "" ?></dd>
                 <dt class="">Vehicle Category</dt>
                 <dd class="pl-4"><?= isset($category) ? $category : "" ?></dd>
-                <!-- <dt class="">Vehicle model</dt>
-                <dd class="pl-4"><?= isset($cab_model) ? $cab_model : "" ?></dd> -->
+                <dt class="">Client Contact No</dt>
+                <dd class="pl-4"><?= isset($contact) ? $contact : "" ?></dd>
                 <dt class="">Driver Name</dt>
                 <dd class="pl-4"><?= isset($driver_name) ? $driver_name : "" ?></dd>
                 <dt class="">Driver Contact</dt>
@@ -45,7 +45,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
         <!-- <div class="clear-fix my-2"></div> -->
         <div class="col-md-6">
             <fieldset class="bor">
-                <legend class="h5 text-muted"> Booking Details</legend>
+                <legend class="h5 text-muted"> </legend>
                 <dl>
                     <dt class="">Ref. Code</dt>
                     <dd class="pl-4"><?= isset($ref_code) ? $ref_code : "" ?></dd>
