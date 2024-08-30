@@ -198,6 +198,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         end_loader();
                     }
                 });
+                
             } else {
                 alert_toast("An error occurred while sending the email.", 'error');
                 end_loader();
