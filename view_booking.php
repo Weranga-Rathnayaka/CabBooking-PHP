@@ -1,5 +1,8 @@
 <?php
-require_once('./config.php');
+require_once('./config.php'); // Include the configuration file for DB connection and environment variables
+require __DIR__ . '/vendor/autoload.php';
+use Twilio\Rest\Client;
+
 if(isset($_GET['id']) && $_GET['id'] > 0){
     // Fetch the booking and client information, including contact
     $qry = $conn->query("SELECT 
@@ -40,7 +43,12 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
         }
     }
 }
+
+
+
 ?>
+
+<!-- HTML and Modal Logic -->
 <style>
     #uni_modal .modal-footer{
         display:none
@@ -54,7 +62,6 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 <legend class="h5 text-muted"> </legend>
                 <dl>
                     <dt class="">Fee</dt>
-                    <!-- <dd class="pl-4"><?= isset($fee) ? $fee : "" ?></dd> -->
                     <dd class="pl-4"><?= isset($fee) ? "LKR " . $fee : "" ?></dd>
 
                     <dt class="">Client Contact No</dt>                   
@@ -62,8 +69,6 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 
                     <dt class="">Vehicle Category</dt>
                     <dd class="pl-4"><?= isset($category) ? $category : "" ?></dd>
-                    <!-- <dt class="">Vehicle model</dt>
-                    <dd class="pl-4"><?= isset($cab_model) ? $cab_model : "" ?></dd> -->
                     <dt class="">Driver</dt>
                     <dd class="pl-4"><?= isset($driver_name) ? $driver_name : "" ?></dd>
                     <dt class="">Driver Contact</dt>
@@ -112,43 +117,103 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
             </fieldset>
         </div>
     </div>
-    <!-- <div class="clear-fix my-2"></div> -->
-    
     
     <div class="text-right">
-        
         <?php if(isset($status) && $status == 0): ?>
         <button class="btn btn-danger btn-flat bg-gradient-danger" type="button" id="cancel_booking">Cancel Bookings</button>
         <?php endif; ?>
         <button class="btn btn-dark btn-flat bg-gradient-dark" type="button" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
     </div>
 </div>
+
 <script>
     $(function(){
         $('#cancel_booking').click(function(){
             _conf("Are you sure to cancel your cab booking [Ref. Code: <b><?= isset($ref_code) ? $ref_code : "" ?></b>]?", "cancel_booking",["<?= isset($id) ? $id : "" ?>"])
         })
     })
-    function cancel_booking($id){
-        start_loader();
-		$.ajax({
-			url:_base_url_+"classes/Master.php?f=update_booking_status",
-			method:"POST",
-			data:{id: $id,status:4},
-			dataType:"json",
-			error:err=>{
-				console.log(err)
-				alert_toast("An error occured.",'error');
-				end_loader();
-			},
-			success:function(resp){
-				if(typeof resp== 'object' && resp.status == 'success'){
-					location.reload();
-				}else{
-					alert_toast("An error occured.",'error');
-					end_loader();
-				}
-			}
-		})
-    }
+
+    // function cancel_booking($id){
+    //     start_loader();
+	// 	$.ajax({
+	// 		url:_base_url_+"classes/Master.php?f=update_booking_status",
+	// 		method:"POST",
+	// 		data:{id: $id,status:4},
+	// 		dataType:"json",
+	// 		error:err=>{
+	// 			console.log(err)
+	// 			alert_toast("An error occured.",'error');
+	// 			end_loader();
+	// 		},
+	// 		success:function(resp){
+	// 			if(typeof resp== 'object' && resp.status == 'success'){
+    //                 // Send the cancellation SMS
+    //                 sendCancellationSMS(
+
+    //                 );
+	// 				location.reload();
+	// 			}else{
+	// 				alert_toast("An error occured.",'error');
+	// 				end_loader();
+	// 			}
+	// 		}
+	// 	})
+    // }
+
+    function cancel_booking($id) {
+    start_loader();
+    $.ajax({
+        url: _base_url_ + "classes/Master.php?f=update_booking_status",
+        method: "POST",
+        data: {id: $id, status: 4},
+        dataType: "json",
+        error: err => {
+            console.log(err);
+            alert_toast("An error occurred.", 'error');
+            end_loader();
+        },
+        success: function (resp) {
+            if (typeof resp == 'object' && resp.status == 'success') {
+                // Prepare SMS details
+                let smsDetails = {
+                    ref_code: "<?= $ref_code ?>",
+                    pickup_zone: "<?= $pickup_zone ?>",
+                    drop_zone: "<?= $drop_zone ?>",
+                    driver_name: "<?= $driver_name ?>",
+                    driver_contact: "<?= $driver_contact ?>",
+                    client: "<?= $client ?>",
+                    contact: "<?= $contact ?>",
+                    fee: "<?= $fee ?>",
+                    client_contact: "<?= $contact ?>" // Ensure this is correct
+                };
+
+                $.ajax({
+                    url: _base_url_ + "send_sms.php",
+                    method: "POST",
+                    data: {details: JSON.stringify(smsDetails)},
+                    dataType: "json",
+                    success: function (smsResp) {
+                        if (smsResp.status === 'success') {
+                            alert_toast("Booking cancelled and SMS sent successfully.", 'success');
+                        } else {
+                            alert_toast("Failed to send SMS: " + smsResp.message, 'error');
+                        }
+                        location.reload();
+                    },
+                    error: function (err) {
+                        console.log(err);
+                        alert_toast("An error occurred while sending SMS.", 'error');
+                    }
+                });
+            } else {
+                alert_toast("An error occurred while updating booking status.", 'error');
+            }
+            end_loader();
+        }
+    });
+}
+
 </script>
+
+
+
