@@ -61,7 +61,7 @@
         </strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
-        <p class="m-0 text-center text-dark">Developed By: Juan Carlos Montero oretnom23</p>
+        <p class="m-0 text-center text-dark">Developed By: Weranga Rathnayaka</p>
         </div>
       </footer>
     </div>

@@ -33,7 +33,7 @@
                     <a class="col item text-decoration-none text-dark book_cab" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-bodyno="<?php echo $row['driver_name'] ?>">
                         <div class="callout callout-primary border-success rounded-0">
                             <dl>
-                                <dt class="h3"><i class="fa fa-taxi"></i> <?php echo $row['driver_name'] ?></dt>
+                                <dt class="h3"><i class="fa fa-user"></i> <?php echo $row['driver_name'] ?></dt>
                                 <dd class="truncate-3 text-muted lh-1">
                                     <small><?php echo $row['category'] ?></small><br>
                                     <small><?php echo $row['driver_identity'] ?></small>

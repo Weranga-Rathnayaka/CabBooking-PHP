@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </p>
                     </div>
                     <div style=\"text-align:center;margin:20px 0;\">
-                        <a href=\"$trackingLink\" style=\"display:inline-block;padding:12px 25px;font-size:16px;color:#fff;background-color:#007bff;border-radius:5px;text-decoration:none;\">Track Order</a>
+                        <a href=\"$trackingLink\" style=\"display:inline-block;padding:12px 25px;font-size:16px;color:#fff;background-color:#007bff;border-radius:5px;text-decoration:none;\">Track Driver</a>
                     </div>
                     <div style=\"text-align:center;color:#888;margin-top:30px;\">
                         <b>You Drink We Drive</b><br>
