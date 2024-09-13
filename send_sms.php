@@ -4,7 +4,8 @@ require __DIR__ . '/vendor/autoload.php';
 use Twilio\Rest\Client;
 
 function sendCancellationSMS($details) {
-   
+    
+
     $client = new Client($account_sid, $auth_token);
 
     $message = "Booking Cancellation:
